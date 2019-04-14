@@ -9,7 +9,7 @@
           <el-input v-model="form.username" placeholder="账户" prefix-icon="el-icon-mobile-phone" class="input"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="form.password" type="password" placeholder="密码" prefix-icon="el-icon-search" class="input"></el-input>
+          <el-input v-model="form.password" type="password" placeholder="密码" prefix-icon="el-icon-search" class="input" ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" class="button" @click="submitForm('form')">登录</el-button>
@@ -46,8 +46,8 @@ export default {
           User(this.form).then(res => {
             // 判断服务器是否响应成功
             if (res.meta.status === 200) {
-              console.log(res.meta)
-              this.$router.push('home')
+              localStorage.setItem('token', res.data.token) // 存储token
+              this.$router.push('home') // 成功跳转home页面
             } else {
               this.$message.error(res.meta.msg)
             }
@@ -58,7 +58,17 @@ export default {
           return false
         }
       })
+    },
+    // 判断token是否存在
+    token () {
+      localStorage.getItem('token')
+      if (localStorage.getItem('token')) {
+        this.$router.push('home')
+      }
     }
+  },
+  created () {
+    this.token()
   }
 }
 </script>
